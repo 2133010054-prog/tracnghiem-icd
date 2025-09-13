@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trắc nghiệm ICD</title>
+    <style>
+        body {"font-family: Arial, sans-serif; text-align: center; margin: 50px;"}
+        #question {font-size: 20px; margin-bottom: 20px;}
+        input {padding: 10px; font-size: 16px; width: 200px;}
+        #progress {margin-top: 20px; font-weight: bold;}
+        .correct {color: green;}
+        .wrong {color: red;}
+        .skip {margin-top: 15px; padding: 8px 16px; font-size: 14px; cursor: pointer; border-radius: 8px; border: none; background-color: #f0ad4e; color: white;}
+    </style>
+</head>
+<body>
+    <h2>Trắc nghiệm thuốc - mã ICD</h2>
+    <div id="question"></div>
+    <input type="text" id="answer" placeholder="Nhập mã ICD và Enter" autofocus>
+    <div id="feedback"></div>
+    <button class="skip" id="skipBtn">Không nhớ</button>
+    <div id="progress"></div>
+
+    <script>
+        let quizData = [{'thuoc': 'Paracetamol', 'icd': 'R51/R50.9'}, {'thuoc': 'Ibifar 200', 'icd': 'R51/R50.9'}, {'thuoc': 'Methocarbamol (Mycotroval)', 'icd': 'R52.0'}, {'thuoc': 'Paracetamol + Methocarbamol (Para F)', 'icd': 'R52.0'}, {'thuoc': 'Độc hoạt tang ký sinh', 'icd': 'M54/M54.5'}, {'thuoc': 'Dưỡng cốt hoàn', 'icd': 'M54/M54.5'}, {'thuoc': 'Cồn xoa bóp', 'icd': 'M54.2'}, {'thuoc': 'Glucosamin', 'icd': 'M17'}, {'thuoc': 'Vitamin E', 'icd': 'E56.0'}, {'thuoc': 'Vitamin C', 'icd': 'D53.2'}, {'thuoc': 'Calci carbonat + Vitamin D3', 'icd': 'E58/M81.8'}, {'thuoc': 'Kẽm gluconat', 'icd': 'E60'}, {'thuoc': 'Sắt', 'icd': 'D50'}, {'thuoc': 'Sáng mắt', 'icd': 'H04.1'}, {'thuoc': 'Natri hylaform 0,1%', 'icd': 'H04.1'}, {'thuoc': 'Tobrameson', 'icd': 'H10'}, {'thuoc': 'Letdion', 'icd': 'H10'}, {'thuoc': 'Ursodeoxycholic acid', 'icd': 'K80'}, {'thuoc': 'Kim tiền thảo', 'icd': 'N20.0'}, {'thuoc': 'Levothyroxin (Disthyrox)', 'icd': 'E03'}, {'thuoc': 'Thiamazol', 'icd': 'E05'}, {'thuoc': 'Fusidic acid + Betamethason', 'icd': 'L23'}, {'thuoc': 'Acyclovir', 'icd': 'B02'}, {'thuoc': 'Flazenca', 'icd': 'K12'}, {'thuoc': 'Boganic', 'icd': 'K75/K77'}, {'thuoc': 'Diệp hạ châu', 'icd': 'K77/K75'}, {'thuoc': 'Venokern', 'icd': 'I87.2/K64.8'}, {'thuoc': 'Isaias', 'icd': 'I87.2/K64.8'}, {'thuoc': 'Glipizid', 'icd': 'E11'}, {'thuoc': 'Gliclazid', 'icd': 'E11'}, {'thuoc': 'Glimepiride', 'icd': 'E11'}, {'thuoc': 'Metformin', 'icd': 'E11'}, {'thuoc': 'Glimepirid + Metformin', 'icd': 'E11'}, {'thuoc': 'Bút tiêm (Insulin)', 'icd': 'E10'}, {'thuoc': 'Fenofibrate', 'icd': 'E78'}, {'thuoc': 'Lovastatin', 'icd': 'E78'}, {'thuoc': 'Atorvastatin', 'icd': 'E78'}, {'thuoc': 'Pravastatin', 'icd': 'E78'}, {'thuoc': 'Irbesartan', 'icd': 'I10'}, {'thuoc': 'Nifedipin', 'icd': 'I10'}, {'thuoc': 'Telmisartan', 'icd': 'I10'}, {'thuoc': 'Valsartan', 'icd': 'I10'}, {'thuoc': 'Amlodipin', 'icd': 'I10'}, {'thuoc': 'Bisoprolol', 'icd': 'I10'}, {'thuoc': 'Losartan', 'icd': 'I10'}, {'thuoc': 'Nicorandil', 'icd': 'I20'}, {'thuoc': 'Isosorbid', 'icd': 'I20'}, {'thuoc': 'Trimetazidin', 'icd': 'I25.9'}, {'thuoc': 'Aspirin', 'icd': 'I25'}, {'thuoc': 'Clopidogrel', 'icd': 'I64/I25.9'}, {'thuoc': 'Betahistin', 'icd': 'R42'}, {'thuoc': 'Piracetam', 'icd': 'R42'}, {'thuoc': 'Acetyl leucin (Gikanin)', 'icd': 'R42'}, {'thuoc': 'An thần bổ tẩm', 'icd': 'F48.0/G47'}, {'thuoc': 'Pregabalin', 'icd': 'F41'}, {'thuoc': 'Sulpirid', 'icd': 'G47'}, {'thuoc': 'Rotundin', 'icd': 'G47'}, {'thuoc': 'Vitamin B3', 'icd': 'E53/G61'}, {'thuoc': 'Flunarizin', 'icd': 'G43'}, {'thuoc': 'Cebraton', 'icd': 'G45'}, {'thuoc': 'Hoạt huyết dưỡng não', 'icd': 'G45'}, {'thuoc': 'Bổ huyết ích não', 'icd': 'G45'}, {'thuoc': 'Hoạt huyết thông mạch', 'icd': 'G45'}, {'thuoc': 'Ginkgo biloba', 'icd': 'H81.3'}, {'thuoc': 'Bacillus subtilis (Domuvar)', 'icd': 'K58.0'}, {'thuoc': 'Loperamid', 'icd': 'K58.0'}, {'thuoc': 'Bisacodyl', 'icd': 'K59.0'}, {'thuoc': 'Drotaverine', 'icd': 'R10'}, {'thuoc': 'Trimebutin maleat', 'icd': 'R10'}, {'thuoc': 'Domperidon', 'icd': 'R11'}, {'thuoc': 'Đại tràng', 'icd': 'K52.3'}, {'thuoc': 'Esomeprazol', 'icd': 'K21'}, {'thuoc': 'Vilanta', 'icd': 'K21'}, {'thuoc': 'Mathigas', 'icd': 'K21'}, {'thuoc': 'Famogast', 'icd': 'K21'}, {'thuoc': 'Bismuth', 'icd': 'K29'}, {'thuoc': 'Dextromethorphan', 'icd': 'R05/J22/J06.9'}, {'thuoc': 'Bromhexin', 'icd': 'R05/J22/J06.9'}, {'thuoc': 'Carbocistein', 'icd': 'R05/J22/J06.9'}, {'thuoc': 'N-acetylcystein', 'icd': 'R05/J22/J06.9'}, {'thuoc': 'Bambuterol', 'icd': 'J45'}, {'thuoc': 'Natri montelukast', 'icd': 'J45'}, {'thuoc': 'Clarithromycin', 'icd': 'J22/J06.9'}, {'thuoc': 'Cefadroxil', 'icd': 'J06.9/J22'}, {'thuoc': 'Amoxicillin', 'icd': 'J06.9/J22'}, {'thuoc': 'Spiramycin + Metronidazol', 'icd': 'J06.9/J22'}, {'thuoc': 'Cefdinir', 'icd': 'J06.9/J22'}, {'thuoc': 'Amoxicillin + acid clavulanic', 'icd': 'J06.9/J22'}, {'thuoc': 'Cefalexin', 'icd': 'J06.9/J22'}, {'thuoc': 'Ofloxacin', 'icd': 'J06.9/J22'}, {'thuoc': 'Alimemazin', 'icd': 'J30.3'}, {'thuoc': 'Fexofenadine', 'icd': 'J30.3'}, {'thuoc': 'Deslotadin', 'icd': 'J30.3'}, {'thuoc': 'Cetirizin', 'icd': 'J30.3'}, {'thuoc': 'Ketoprofen', 'icd': 'M06'}, {'thuoc': 'Meloxicam', 'icd': 'M06'}, {'thuoc': 'Aceclofenac', 'icd': 'M06'}, {'thuoc': 'Etoricoxib', 'icd': 'M06'}, {'thuoc': 'Ibuprofen', 'icd': 'M06'}, {'thuoc': 'Naproxen', 'icd': 'M06'}, {'thuoc': 'Methyl prednisolon', 'icd': 'M06'}, {'thuoc': 'Prednisolon acetat', 'icd': 'J06.9/J22'}];
+        // Xáo trộn mảng
+        quizData = quizData.sort(() => Math.random() - 0.5);
+
+        let current = 0;
+        let correctCount = 0;
+
+        const questionEl = document.getElementById("question");
+        const answerEl = document.getElementById("answer");
+        const feedbackEl = document.getElementById("feedback");
+        const progressEl = document.getElementById("progress");
+        const skipBtn = document.getElementById("skipBtn");
+
+        const cuteEmojis = ["🥰", "😍", "😘", "😚", "😻", "🤩", "😊", "😇", "🌸", "✨", "🎀"];
+
+        function randomEmoji() {
+            return cuteEmojis[Math.floor(Math.random() * cuteEmojis.length)];
+        }
+
+        function showQuestion() {
+            if (current < quizData.length) {
+                questionEl.innerHTML = "Thuốc: <b>" + quizData[current].thuoc + "</b>";
+                answerEl.value = "";
+                feedbackEl.innerHTML = "";
+                progressEl.innerHTML = "Câu " + (current+1) + " / " + quizData.length + 
+                                        " | Đúng: " + correctCount;
+                answerEl.focus();
+            } else {
+                questionEl.innerHTML = "🎉 Hoàn thành!";
+                answerEl.style.display = "none";
+                skipBtn.style.display = "none";
+                feedbackEl.innerHTML = "Bạn đã trả lời đúng " + correctCount + "/" + quizData.length + " câu.";
+            }
+        }
+
+        answerEl.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                let userAns = answerEl.value.trim().toUpperCase();
+                let correctAns = quizData[current].icd.split("/").map(x => x.trim().toUpperCase());
+
+                if (correctAns.includes(userAns)) {
+                    feedbackEl.innerHTML = "<span class='correct'>✅ Chính xác! " + randomEmoji() + "</span>";
+                    correctCount++;
+                    current++;
+                    setTimeout(showQuestion, 1000);
+                } else {
+                    feedbackEl.innerHTML = "<span class='wrong'>❌ Sai, thử lại!</span>";
+                }
+            }
+        });
+
+        skipBtn.addEventListener("click", function() {
+            let correctAns = quizData[current].icd;
+            feedbackEl.innerHTML = "😜 <b>Ahihi đồ ngốc!</b> Đáp án đúng là: <span class='correct'>" + correctAns + "</span>";
+            current++;
+            setTimeout(showQuestion, 2000);
+        });
+
+        showQuestion();
+    </script>
+</body>
+</html>
